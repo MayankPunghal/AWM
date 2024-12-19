@@ -1,6 +1,7 @@
 # AWM
 
 ## Execute the scripts to create schema
+You can find the scripts to run in the Database-PG directory
 
 ## Python FAST API
 
