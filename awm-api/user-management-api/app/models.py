@@ -13,7 +13,7 @@ class User(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     username = Column(String, unique=True, nullable=False)
     email = Column(String, unique=True, nullable=False)
-    profileid = Column(Integer, unique=True, nullable=False)
+    profileid = Column(Integer, primary_key=True, autoincrement=True)
     first_name = Column(String, unique=True, nullable=False)
     last_name = Column(String, unique=True, nullable=False)
     gender = Column(String, unique=True, nullable=False)

@@ -1,3 +1,6 @@
+GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA public TO awmappuser;
+--GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA <Your Schema> TO <Your User>;
+
 CREATE TABLE IF NOT EXISTS public.users
 (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
@@ -63,6 +66,7 @@ CREATE TABLE IF NOT EXISTS public.users
     CONSTRAINT users_username_key UNIQUE (username)
 )
 TABLESPACE pg_default;
+GRANT ALL ON TABLE public.users TO awmappuser;
 
 --insert script
 DO $$
