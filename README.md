@@ -6,7 +6,7 @@
 
 Update the Postgres connection string in config.py
 ```    
-![alt text](https://github.com/MayankPunghal/AWM/blob/images/image.png)
+DATABASE_URL = "postgresql://awmappuser:<Your Password>@localhost/awm"
 ```
 
 Navigate to the project directory
