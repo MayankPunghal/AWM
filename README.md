@@ -6,7 +6,7 @@
 
 Update the Postgres connection string in config.py
 ```    
-![alt text](blob/images/image.png)
+![alt text](https://github.com/MayankPunghal/AWM/blob/images/image.png)
 ```
 
 Navigate to the project directory
