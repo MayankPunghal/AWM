@@ -43,7 +43,10 @@ class TokenValidationMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         # Get the path of the current request
         request_path = request.url.path
-
+        
+        if request.method == "OPTIONS":
+            return await call_next(request)
+        
         # Check if the path should be excluded from token validation
         if any(request_path.startswith(path) for path in self.excluded_paths):
             # Skip token validation for excluded paths

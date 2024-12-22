@@ -2,6 +2,7 @@ import axios from "axios";
 // import axiosInstance from "../api/axios";
 
 const apiUrl = process.env.REACT_APP_API_URL;
+console.log("Token: ", localStorage.getItem('token'));  // Check if the token is being set correctly
 const axiosInstance = axios.create({
   baseURL: apiUrl,
   headers: {

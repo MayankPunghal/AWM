@@ -45,11 +45,11 @@ const Navbar: React.FC = () => {
           {isHomeOpen && !isCollapsed && (
             <div className="">
               {/* Login Link */}
-        <Link to="/login" className="px-3 py-2 bg-gray-600 hover:bg-gray-500 flex text-center">
+        <Link to="/login" className="px-4 py-2 bg-gray-600 hover:bg-gray-500 flex text-center">
           {isCollapsed ? "L" : "Login"}
         </Link>
         {/* Login Link */}
-        <Link to="/register" className="px-3 py-2 bg-gray-600 hover:bg-gray-500 flex text-center">
+        <Link to="/register" className="px-4 py-2 bg-gray-600 hover:bg-gray-500 flex text-center">
           {isCollapsed ? "R" : "Register"}
         </Link>
             </div>

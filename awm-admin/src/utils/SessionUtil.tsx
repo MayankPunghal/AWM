@@ -9,7 +9,6 @@ interface SessionUtilProps {
 const SessionUtil = ({timeoutInMinutes}:  SessionUtilProps)  => {
   const navigate = useNavigate();
   const handleOnIdle = () => {
-    console.log('User was idle');
     localStorage.clear();
     showToast('Session Timed Out Due To Inactivity !', false, 2000, false);
     setTimeout(() => {

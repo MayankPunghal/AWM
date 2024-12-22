@@ -8,10 +8,7 @@ interface PrivateRouteProps {
 
 const PrivateRoute: React.FC<PrivateRouteProps> = ({ element }) => {
   const { getToken, checkTokenValidity } = useAuth();
-
-
   checkTokenValidity();
-
   const token = getToken();
   if (token) {
     return <>{element}</>;

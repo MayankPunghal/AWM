@@ -36,7 +36,6 @@ const useAuth = () => {
           setTimeout(() => redirectToLogin(), 2000);
         }
       } catch (error) {
-        // Handle parsing error
         console.error('Error parsing token payload:', error);
         removeToken();
       }

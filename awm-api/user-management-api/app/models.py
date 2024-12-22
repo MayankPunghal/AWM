@@ -71,8 +71,8 @@ class User(Base):
     children_count = Column(Integer, default=0)
 
 class PaginatedResponse(BaseModel):
-    data: List[UserOut]  # List of users
-    total: int  # Total number of users
-    page: int  # Current page
-    size: int  # Items per page
-    total_pages: int  # Total number of pages
+    data: List[UserOut]
+    total: int
+    page: int
+    size: int
+    total_pages: int

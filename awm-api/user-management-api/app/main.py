@@ -11,9 +11,6 @@ app = FastAPI()
 origins = [
     "http://localhost:3000",  # Your React app origin
 ]
-
-app.add_middleware(RequestLoggingMiddleware)
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,  # Allow only this origin
@@ -21,6 +18,13 @@ app.add_middleware(
     allow_methods=["*"],  # Allow all methods (GET, POST, etc.)
     allow_headers=["*"],  # Allow all headers
 )
+# Initialize the database
+models.Base.metadata.create_all(bind=database.engine)
+
+# Include routers
+app.include_router(user_router)
+
+app.add_middleware(RequestLoggingMiddleware)
 
 # Other middlewares should come after CORS middleware
 excluded_paths = [
@@ -30,10 +34,4 @@ excluded_paths = [
     "/docs",
     "/openapi.json",
 ]
-# app.add_middleware(TokenValidationMiddleware, excluded_paths=excluded_paths)
-
-# Initialize the database
-models.Base.metadata.create_all(bind=database.engine)
-
-# Include routers
-app.include_router(user_router)
+app.add_middleware(TokenValidationMiddleware, excluded_paths=excluded_paths)
