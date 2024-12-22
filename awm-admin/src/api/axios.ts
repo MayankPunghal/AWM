@@ -1,13 +1,13 @@
 import axios from 'axios';
 
 // Replace with your backend URL
-const apiUrl = 'http://127.0.0.1:8000';  // FastAPI default URL
-
+const apiUrl = process.env.REACT_APP_API_URL;
+console.log("axios token : "+`${localStorage.getItem('token')}`)
 const axiosInstance = axios.create({
   baseURL: apiUrl,
   headers: {
-    'Content-Type': 'application/json',
-  },
+    'Authorization' : `Bearer ${localStorage.getItem('token')}`,
+  }
 });
 
 export default axiosInstance;

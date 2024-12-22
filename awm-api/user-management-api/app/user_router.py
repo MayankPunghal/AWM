@@ -24,7 +24,7 @@ def create_user(user: schemas.UserCreate, db: Session = Depends(database.get_db)
 @user_router.get("/users", response_model=models.PaginatedResponse)
 def list_users(
     page: int = Query(1, ge=1),  # Ensure page is >= 1
-    size: int = Query(10, ge=1, le=100),  # Ensure size is between 1 and 100
+    size: int = Query(10, ge=1, le=10),  # Ensure size is between 1 and 100
     db: Session = Depends(database.get_db),
 ):
     # Fetch users and total count from database
@@ -68,9 +68,15 @@ def login_for_access_token(form_data: schemas.Login, db: Session = Depends(datab
     user = crud.get_user_by_username(db, username=form_data.username)
     if not user or not verify_password(form_data.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
-
     # Generate access token
     access_token = create_access_token(
         data={"sub": user.email}, expires_delta=timedelta(minutes=30)
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+@user_router.get("/healthcheck", tags=["Health Check"])
+def health_check():
+    """
+    Health check endpoint to verify the service is running.
+    """
+    return {"status": "ok"}

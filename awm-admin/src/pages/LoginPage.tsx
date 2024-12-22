@@ -11,7 +11,8 @@ const LoginPage: React.FC = () => {
   const handleLogin = async () => {
     try {
       const token = await loginUser(username, password);
-      localStorage.setItem("authToken", token);
+      console.log(token);
+      localStorage.setItem("token", token);
       navigate("/users");
     } catch (error: any) {
       alert("Login failed: " + error.message);
@@ -19,7 +20,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
+    <div className="flex justify-center items-center h-screen">
       <div className="p-6 bg-white rounded shadow-md">
         <h2 className="text-2xl font-bold mb-4">Login</h2>
         <input

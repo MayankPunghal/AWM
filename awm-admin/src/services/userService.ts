@@ -1,6 +1,13 @@
 import axios from "axios";
+// import axiosInstance from "../api/axios";
 
-const apiUrl = "http://localhost:8000";  // Replace with your FastAPI server URL
+const apiUrl = process.env.REACT_APP_API_URL;
+const axiosInstance = axios.create({
+  baseURL: apiUrl,
+  headers: {
+    'Authorization' : `Bearer ${localStorage.getItem('token')}`,
+  }
+});
 
 // Register user
 export const registerUser = async (user: {
@@ -11,24 +18,23 @@ export const registerUser = async (user: {
   last_name: string;
   gender: string;
 }) => {
-  const response = await axios.post(`${apiUrl}/users/`, user);
+  const response = await axiosInstance.post(`/users/`, user);
   return response.data;
 };
 
-// Get list of users all
-// export const getUsers = async () => {
-//   const response = await axios.get(`${apiUrl}/users/`);
-//   return response.data;
-// };
-//Get list of users paginated
 export const getUsers = async (page: number, size: number) => {
-  const response = await axios.get(`${apiUrl}/users?page=${page}&size=${size}`);
+  const response = await axiosInstance.get(`/users?page=${page}&size=${size}`);
   return response.data;
 };
 
 
 // Login user (JWT authentication)
 export const loginUser = async (username: string, password: string) => {
-  const response = await axios.post(`${apiUrl}/login/`, { username, password });
-  return response.data.token;
+  const response = await axiosInstance.post(`/login/`, { username, password });
+  return response.data.access_token;
 };
+
+export const checkApiHealth = async () => {
+  const response = await axiosInstance.get(`/healthcheck`)
+  return response.data.status;
+}

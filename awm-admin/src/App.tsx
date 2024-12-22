@@ -1,33 +1,33 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { AuthProvider } from "./utils/AuthContext";  // Import AuthProvider
-import ProtectedRoute from "./utils/ProtectedRoute";  // Import ProtectedRoute
-import HomePage from "./pages/HomePage";
-import LoginPage from "./pages/LoginPage";
-import RegisterPage from "./pages/RegisterPage";
-import UserListPage from "./pages/UserListPage";
+import { BrowserRouter as Router, useLocation } from "react-router-dom";
+import Navbar from "./utils/Navbar";
+import HealthCheck from './utils/ApiHealthCheck';
+import AppRoutes from "./utils/AppRoutes";
+import SessionUtil from "./utils/SessionUtil";
+
+const AppWithNavbar: React.FC = () => {
+  const location = useLocation();
+  const routesWithoutNavbar = ["/login", "/register", "/"];
+  const showNavbar = !routesWithoutNavbar.includes(location.pathname);
+
+  return (
+    <div className="flex">
+      <SessionUtil timeoutInMinutes={Number(process.env.REACT_APP_SESSION_TIMEOUT)} />
+      {showNavbar && <Navbar />}
+      <div className="flex-1 p-6">
+        <AppRoutes/>
+      </div>
+    </div>
+  );
+};
 
 const App: React.FC = () => {
   return (
-    <AuthProvider> {/* Provide auth context */}
       <Router>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-
-          {/* Protected route, only accessible if user is logged in */}
-          <Route
-            path="/users"
-            element={
-              <ProtectedRoute> {/* Protect UserListPage */}
-                <UserListPage />
-              </ProtectedRoute>
-            }
-          />
-        </Routes>
+        <HealthCheck>
+          <AppWithNavbar />
+        </HealthCheck>
       </Router>
-    </AuthProvider>
   );
 };
 

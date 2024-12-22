@@ -5,7 +5,7 @@ import List from "../components/List";
 const UserListPage: React.FC = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize] = useState(100); // Default page size
+  const [pageSize] = useState(10); // Default page size
   const [totalUsers, setTotalUsers] = useState(0);
 
   useEffect(() => {
@@ -13,7 +13,7 @@ const UserListPage: React.FC = () => {
       try {
         const response = await getUsers(currentPage, pageSize);
         setUsers(response.data);
-        setTotalUsers(response.total); // Assuming API returns total count
+        setTotalUsers(response.total);
       } catch (error) {
         console.error("Failed to fetch users:", error);
       }

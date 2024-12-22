@@ -4,7 +4,7 @@ GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA public TO awmappuser;
 CREATE TABLE IF NOT EXISTS public.users
 (
     id uuid NOT NULL DEFAULT gen_random_uuid(),
-    profileid SERIAL PRIMARY KEY,,
+    profileid SERIAL PRIMARY KEY,
     username character varying(50) COLLATE pg_catalog."default" NOT NULL,
     email character varying(100) COLLATE pg_catalog."default" NOT NULL,
     password_hash text COLLATE pg_catalog."default" NOT NULL,

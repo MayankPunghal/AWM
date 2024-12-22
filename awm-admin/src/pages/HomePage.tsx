@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const HomePage: React.FC = () => {
   return (
-    <div className="flex flex-col justify-center items-center h-screen bg-gray-100">
+    <div className="flex flex-col justify-center items-center h-screen">
       <h1 className="text-4xl font-bold mb-4">Welcome to AWM Admin</h1>
       <p className="mb-4">Manage your users, register, and view user lists easily.</p>
       <div className="flex space-x-4">

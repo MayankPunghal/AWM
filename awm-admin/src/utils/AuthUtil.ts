@@ -28,11 +28,9 @@ const useAuth = () => {
     if (token) {
       try {
         const payload = token != null ? JSON.parse(atob(token.split('.')[1])) : (Math.floor(Date.now() / 1000) - 100);
-
-        // Check token expiration
+        
         const currentTimestamp = Math.floor(Date.now() / 1000);
         if (payload.exp < currentTimestamp) {
-          // Token has expired
           removeToken();
           showToast('Token expired. Please login again.', false, 2000);
           setTimeout(() => redirectToLogin(), 2000);
