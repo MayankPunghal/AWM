@@ -13,7 +13,7 @@ const AppWithNavbar: React.FC = () => {
   return (
     <div className="flex">
       <SessionUtil timeoutInMinutes={Number(process.env.REACT_APP_SESSION_TIMEOUT)} />
-      {showNavbar && <Navbar />}
+      {/* {showNavbar && <Navbar />} */}
       <div className="flex-1">
         <AppRoutes/>
       </div>

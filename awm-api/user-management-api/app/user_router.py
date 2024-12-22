@@ -70,7 +70,7 @@ def login_for_access_token(form_data: schemas.Login, db: Session = Depends(datab
         raise HTTPException(status_code=401, detail="Invalid credentials")
     # Generate access token
     access_token = create_access_token(
-        data={"sub": user.email}, expires_delta=timedelta(minutes=30)
+        data={"sub": user.email, "role": user.role, "id":user.profileid, "firstname":user.first_name, "isactive":user.is_active, "lastlogin":user.last_login.isoformat(), "createat":user.created_at.isoformat()}, expires_delta=timedelta(minutes=30)
     )
     return {"access_token": access_token, "token_type": "bearer"}
 

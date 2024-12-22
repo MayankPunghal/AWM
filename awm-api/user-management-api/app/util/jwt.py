@@ -29,6 +29,7 @@ def create_access_token(data: dict, expires_delta: Union[timedelta, None] = None
 def verify_token(token: str):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        print(payload)
         return payload if payload["exp"] >= datetime.utcnow().timestamp() else None
     except JWTError:
         return None

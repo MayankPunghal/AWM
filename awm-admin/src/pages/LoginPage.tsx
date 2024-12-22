@@ -3,6 +3,7 @@ import Button from "../components/Button";
 import { loginUser } from "../services/userService";
 import { useNavigate } from "react-router-dom";
 import { showToast } from "../utils/ToastUtil";
+import { jwtDecode } from "../utils/JwtDecode";
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState<string>("");
@@ -14,6 +15,12 @@ const LoginPage: React.FC = () => {
       const token = await loginUser(username, password);
       showToast("Welcome Back", true, 2000, false);
       localStorage.setItem("token", token);
+      const decodedToken: any = jwtDecode(token);
+      localStorage.setItem("userDetails", JSON.stringify(decodedToken));
+
+      const userDetails = JSON.parse(localStorage.getItem("userDetails") || "{}");
+      console.log(userDetails);
+
       navigate("/users");
     } catch (error: any) {
       showToast("Login failed: " + error.message, false, 2000, false);
