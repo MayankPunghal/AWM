@@ -1,0 +1,12 @@
+__pycache__/
+*.py[cod]
+**/__pycache__/
+**/*.pyc
+node_modules/
+node_modules/.cache
+node_modules/.cache/default-development
+.eslintcache
+.env
+.env.development
+util/__pycache__/
+app/__pycache__/
