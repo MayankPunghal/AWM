@@ -1,14 +1,16 @@
 import axios from "axios";
-// import axiosInstance from "../api/axios";
+import { getAxiosInstance } from '../api/AxiosInstanceFactory';
 
-const apiUrl = process.env.REACT_APP_API_URL;
-console.log("Token: ", localStorage.getItem('token'));  // Check if the token is being set correctly
-const axiosInstance = axios.create({
-  baseURL: apiUrl,
-  headers: {
-    'Authorization' : `Bearer ${localStorage.getItem('token')}`,
-  }
-});
+// const apiUrl = process.env.REACT_APP_API_URL;
+// const getAxiosInstance = () => {
+//   const axioInstance =  axios.create({
+//   baseURL: apiUrl,
+//   headers: {
+//     'Authorization' : `Bearer ${localStorage.getItem('token')}`,
+//   }
+// });
+// return axioInstance;
+// };
 
 // Register user
 export const registerUser = async (user: {
@@ -19,11 +21,13 @@ export const registerUser = async (user: {
   last_name: string;
   gender: string;
 }) => {
+  const axiosInstance = getAxiosInstance('user-management-api');
   const response = await axiosInstance.post(`/users/`, user);
   return response.data;
 };
 
 export const getUsers = async (page: number, size: number) => {
+  const axiosInstance = getAxiosInstance('user-management-api')
   const response = await axiosInstance.get(`/users?page=${page}&size=${size}`);
   return response.data;
 };
@@ -31,11 +35,13 @@ export const getUsers = async (page: number, size: number) => {
 
 // Login user (JWT authentication)
 export const loginUser = async (username: string, password: string) => {
+  const axiosInstance = getAxiosInstance('user-management-api')
   const response = await axiosInstance.post(`/login/`, { username, password });
   return response.data.access_token;
 };
 
 export const checkApiHealth = async () => {
+  const axiosInstance = getAxiosInstance('user-management-api')
   const response = await axiosInstance.get(`/healthcheck`)
   return response.data.status;
 }

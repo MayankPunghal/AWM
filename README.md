@@ -10,6 +10,12 @@ You can track user stories and bugs using the following link:
 Join our Discord server to collaborate on this project:
 [AWM Discord Invite](https://discord.gg/fkngqFQN)
 
+### Prerequisites
+Make sure you have the following installed:
+- Python 3.x
+- Node.js and npm
+- PostgreSQL
+
 ### Database Setup
 Execute the scripts to create the schema. You can find the scripts to run in the `Database-PG` directory.
 
