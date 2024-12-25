@@ -3,7 +3,8 @@ from sqlalchemy.orm import Session
 from typing import List
 from .util.crypt import hash_password, verify_password  
 from .util.jwt import create_access_token
-from . import crud, schemas, database, models 
+from . import crud, schemas, database, models
+from .util.search.global_search import get_records_with_search
 from datetime import timedelta
 from typing import Optional
 
@@ -37,7 +38,24 @@ def list_users(
         "size": size,
         "total_pages": (total + size - 1) // size  # Calculate total pages
     }
+    
+@user_router.get("/users_with_search", response_model=models.PaginatedResponse)
+def list_users_with_search(
+    page: int = Query(1, ge=1),  # Ensure page is >= 1
+    size: int = Query(10, ge=1, le=10),  # Ensure size is between 1 and 10
+    search: Optional[str] = Query(None, alias="q"),  # Optional search query parameter
+    db: Session = Depends(database.get_db),
+):
+    # Fetch users and total count with search filter if query exists
+    users, total = get_records_with_search(db, models.User, page, size, search)  # Call the search function
 
+    return {
+        "data": users,
+        "total": total,
+        "page": page,
+        "size": size,
+        "total_pages": (total + size - 1) // size  # Calculate total pages
+    }
 # Route to get a specific user by ID
 @user_router.get("/users/{user_id}", response_model=schemas.UserOut)
 def get_user(user_id: str, db: Session = Depends(database.get_db)):

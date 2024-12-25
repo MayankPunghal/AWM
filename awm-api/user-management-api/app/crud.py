@@ -4,6 +4,8 @@ from .schemas import UserCreate
 from uuid import UUID
 from passlib.context import CryptContext
 from typing import Optional
+from sqlalchemy import or_
+from sqlalchemy.types import String, Integer, UUID, DateTime, Boolean
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 

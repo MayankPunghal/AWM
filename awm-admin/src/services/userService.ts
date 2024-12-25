@@ -32,11 +32,18 @@ export const getUsers = async (page: number, size: number) => {
   return response.data;
 };
 
+export const getUsersWithSearch = async (page: number, size: number, search?: string) => {
+  // console.log(`/users_with_search?page=${page}&size=${size}${search ? `&search=${search}` : ''}`);
+  const axiosInstance = getAxiosInstance('user-management-api');
+  const response = await axiosInstance.get(`/users_with_search?page=${page}&size=${size}${search ? `&q=${search}` : ''}`);
+  return response.data;
+};
 
 // Login user (JWT authentication)
 export const loginUser = async (username: string, password: string) => {
   const axiosInstance = getAxiosInstance('user-management-api')
   const response = await axiosInstance.post(`/login/`, { username, password });
+  console.log("response", response);
   return response.data.access_token;
 };
 

@@ -14,7 +14,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       {/* <Navbar /> */}
       <div className="flex flex-1 overflow-hidden pt-16 pb-16">
         <main className="flex-1 overflow-y-auto p-4">
-          {children}``
+          {children}
         </main>
       </div>
       <Footer />
