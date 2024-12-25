@@ -1,6 +1,0 @@
-__pycache__/
-*.py[cod]
-node_modules/
-.env
-.env.development
-util/__pycache__/
