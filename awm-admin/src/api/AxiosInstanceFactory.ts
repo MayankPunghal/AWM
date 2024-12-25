@@ -21,7 +21,6 @@ export const getAxiosInstance = (serviceName: string) => {
     },
   });
 
-  // Optional: Add interceptors for advanced use cases
   axiosInstance.interceptors.response.use(
     (response) => response,
     (error) => {

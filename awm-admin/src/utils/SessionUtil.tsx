@@ -11,6 +11,7 @@ const SessionUtil = ({timeoutInMinutes}:  SessionUtilProps)  => {
   const handleOnIdle = () => {
     localStorage.clear();
     showToast('Session Timed Out Due To Inactivity !', false, 2000, false);
+    console.log("Session Timed Out Due To Inactivity !");
     setTimeout(() => {
       navigate('/login');
     }, 2000);

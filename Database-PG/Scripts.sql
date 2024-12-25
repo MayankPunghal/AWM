@@ -1,146 +1,193 @@
-GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA public TO awmappuser;
---GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA <Your Schema> TO <Your User>;
+-- Full table schema with additional columns
 
-CREATE TABLE IF NOT EXISTS public.users
-(
-    id uuid NOT NULL DEFAULT gen_random_uuid(),
-    profileid SERIAL PRIMARY KEY,
-    username character varying(50) COLLATE pg_catalog."default" NOT NULL,
-    email character varying(100) COLLATE pg_catalog."default" NOT NULL,
-    password_hash text COLLATE pg_catalog."default" NOT NULL,
-    is_active boolean DEFAULT true,
-    created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    first_name character varying(100) COLLATE pg_catalog."default",
-    last_name character varying(100) COLLATE pg_catalog."default",
-    gender character varying(10) COLLATE pg_catalog."default",
-    phone_number character varying(20) COLLATE pg_catalog."default",
-    address text COLLATE pg_catalog."default",
-    city character varying(100) COLLATE pg_catalog."default",
-    state character varying(100) COLLATE pg_catalog."default",
-    zip_code character varying(10) COLLATE pg_catalog."default",
-    country character varying(100) COLLATE pg_catalog."default",
-    date_of_birth date,
-    date_joined timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
-    last_login timestamp without time zone,
-    profile_picture text COLLATE pg_catalog."default",
-    bio text COLLATE pg_catalog."default",
-    website character varying(255) COLLATE pg_catalog."default",
-    twitter_handle character varying(100) COLLATE pg_catalog."default",
-    facebook_profile character varying(255) COLLATE pg_catalog."default",
-    linkedin_profile character varying(255) COLLATE pg_catalog."default",
-    role character varying(50) COLLATE pg_catalog."default",
-    subscription_type character varying(50) COLLATE pg_catalog."default",
-    is_verified boolean DEFAULT false,
-    verification_code character varying(50) COLLATE pg_catalog."default",
-    last_password_change timestamp without time zone,
-    recovery_email character varying(255) COLLATE pg_catalog."default",
-    preferred_language character varying(50) COLLATE pg_catalog."default",
-    timezone character varying(50) COLLATE pg_catalog."default",
-    newsletter_subscription boolean DEFAULT true,
-    mobile_verified boolean DEFAULT false,
-    email_verified boolean DEFAULT false,
-    age integer,
-    favorite_color character varying(50) COLLATE pg_catalog."default",
-    preferred_payment_method character varying(50) COLLATE pg_catalog."default",
-    is_admin boolean DEFAULT false,
-    is_banned boolean DEFAULT false,
-    bio_updated timestamp without time zone,
-    country_code character varying(10) COLLATE pg_catalog."default",
-    street_address character varying(255) COLLATE pg_catalog."default",
-    emergency_contact_name character varying(255) COLLATE pg_catalog."default",
-    emergency_contact_phone character varying(20) COLLATE pg_catalog."default",
-    emergency_contact_relation character varying(50) COLLATE pg_catalog."default",
-    last_activity timestamp without time zone,
-    status_message text COLLATE pg_catalog."default",
-    social_media_links text COLLATE pg_catalog."default",
-    login_attempts integer DEFAULT 0,
-    last_failed_login timestamp without time zone,
-    is_deleted boolean DEFAULT false,
-    preferred_contact_method character varying(50) COLLATE pg_catalog."default",
-    education_level character varying(50) COLLATE pg_catalog."default",
-    occupation character varying(100) COLLATE pg_catalog."default",
-    company_name character varying(255) COLLATE pg_catalog."default",
-    marital_status character varying(50) COLLATE pg_catalog."default",
-    children_count integer DEFAULT 0,
-    CONSTRAINT users_email_key UNIQUE (email),
-    CONSTRAINT users_username_key UNIQUE (username)
-)
-TABLESPACE pg_default;
-GRANT ALL ON TABLE public.users TO awmappuser;
+-- LoginTracking Table
+CREATE TABLE LoginTracking (
+    LoginTrackingId BIGINT NOT NULL,
+    UserMasterId INT NOT NULL,
+    UserName VARCHAR(50) NOT NULL,
+    LoginTriedIP VARCHAR(255),
+    LoginTriedOn TIMESTAMP NOT NULL,
+    RowUpdate TIMESTAMP DEFAULT current_timestamp,
+    RowCreate TIMESTAMP DEFAULT current_timestamp,
+    RowEvent VARCHAR(255),
+    PRIMARY KEY (LoginTrackingId),
+    FOREIGN KEY (UserMasterId) REFERENCES UserMaster(UserMasterId)
+);
 
---insert script
-DO $$
-	BEGIN
-	    -- Loop to insert 1 million dummy records
-	    FOR i IN 1..1000000 LOOP
-	        INSERT INTO public.users (
-	            username, email, password_hash,is_active,created_at,first_name, last_name, gender, phone_number, 
-	            address, city, state, zip_code, country, date_of_birth, 
-	            date_joined, last_login, profile_picture, bio, website, 
-	            twitter_handle, facebook_profile, linkedin_profile, role, 
-	            subscription_type, is_verified, verification_code, 
-	            last_password_change, recovery_email, preferred_language, 
-	            timezone, newsletter_subscription, mobile_verified, email_verified, 
-	            age, favorite_color, preferred_payment_method, is_admin, 
-	            is_banned, bio_updated, country_code, street_address, 
-	            emergency_contact_name, emergency_contact_phone, 
-	            emergency_contact_relation, last_activity, status_message, 
-	            social_media_links, login_attempts, last_failed_login, 
-	            is_deleted, preferred_contact_method, education_level, 
-	            occupation, company_name, marital_status, children_count
-	        ) VALUES (
-	            'testuser' || i, 
-	            'testuser' || i || '@example.com',
-				'$2b$12$r8poOR4/b5FL9.2xlTNxrenml3eVpcifwlHYw1EjFGaFzET/H34u6',
-				TRUE,
-				CURRENT_TIMESTAMP,
-	            CASE WHEN (i % 2) = 0 THEN 'John' ELSE 'Jane' END, 
-	            'Doe', 
-	            CASE WHEN (i % 2) = 0 THEN 'Male' ELSE 'Female' END,
-	            '123-456-789' || i % 1000, 
-	            '123 Test St, TestCity, TestState, 12345', 
-	            'TestCity', 'TestState', '12345', 'TestCountry', 
-	            CURRENT_DATE - INTERVAL '18 years' - (FLOOR(random() * 40) || ' years')::INTERVAL,
-	            CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 
-	            'https://example.com/profile-pics/testuser' || i || '.jpg', 
-	            'This is a dummy bio for user ' || i, 
-	            'https://testuser' || i || '.com', 
-	            '@testuser' || i, 
-	            'https://facebook.com/testuser' || i, 
-	            'https://linkedin.com/in/testuser' || i, 
-	            'User', 'Free', TRUE, 'VERIFICATION_CODE', 
-	            CURRENT_TIMESTAMP,
-				'testuser' || i || '@recover.com', 
-	            'English', 'UTC',
-				TRUE,
-				FALSE,
-				TRUE, 
-	            FLOOR(random() * 40) + 18, 
-	            CASE WHEN (i % 2) = 0 THEN 'Blue' ELSE 'Red' END, 
-	            'Credit Card',
-				FALSE, 
-	            FALSE,
-				CURRENT_TIMESTAMP,
-				'TestCont',
-				'Street123',
-				'EmergencyName',
-				'EmergencyPhone',
-				'EmergnecyRelation',
-				CURRENT_TIMESTAMP,
-				'This is the status message', 
-	            'Facebook, Twitter, LinkedIn', 
-	            0,
-				CURRENT_TIMESTAMP,
-				TRUE,
-				'Email',
-				'Bachelor', 
-	            'Engineer',
-				'TestCompany',
-				'Single',
-				0
-	        );
-	    END LOOP;
-	END $$;
+-- UserMaster Table
+CREATE TABLE UserMaster (
+    UserMasterId INT NOT NULL,
+    UserName VARCHAR(50) NOT NULL,
+    UserEmail VARCHAR(100) NOT NULL,
+    PasswordHash VARCHAR(255) NOT NULL,
+    Role VARCHAR(50) NOT NULL,
+    RowUpdate TIMESTAMP DEFAULT current_timestamp,
+    RowCreate TIMESTAMP DEFAULT current_timestamp,
+    RowEvent VARCHAR(255),
+    PRIMARY KEY (UserMasterId)
+);
 
-    --SELECT
-    select * from users
+-- UserAccessGroupMaster Table
+CREATE TABLE UserAccessGroupMaster (
+    AccessGroupId INT NOT NULL,
+    AccessGroupName VARCHAR(100) NOT NULL,
+    Description TEXT,
+    RowUpdate TIMESTAMP DEFAULT current_timestamp,
+    RowCreate TIMESTAMP DEFAULT current_timestamp,
+    RowEvent VARCHAR(255),
+    PRIMARY KEY (AccessGroupId)
+);
+
+-- RightMaster Table
+CREATE TABLE RightMaster (
+    RightId INT NOT NULL,
+    RightName VARCHAR(100) NOT NULL,
+    Description TEXT,
+    RowUpdate TIMESTAMP DEFAULT current_timestamp,
+    RowCreate TIMESTAMP DEFAULT current_timestamp,
+    RowEvent VARCHAR(255),
+    PRIMARY KEY (RightId)
+);
+
+-- AccessGroupRight Table
+CREATE TABLE AccessGroupRight (
+    AccessGroupRightId INT NOT NULL,
+    AccessGroupId INT NOT NULL,
+    RightId INT NOT NULL,
+    RowUpdate TIMESTAMP DEFAULT current_timestamp,
+    RowCreate TIMESTAMP DEFAULT current_timestamp,
+    RowEvent VARCHAR(255),
+    PRIMARY KEY (AccessGroupRightId),
+    FOREIGN KEY (AccessGroupId) REFERENCES UserAccessGroupMaster(AccessGroupId),
+    FOREIGN KEY (RightId) REFERENCES RightMaster(RightId)
+);
+
+-- SkillMaster Table
+CREATE TABLE SkillMaster (
+    SkillId INT NOT NULL,
+    SkillName VARCHAR(100) NOT NULL,
+    SkillDescription TEXT,
+    RowUpdate TIMESTAMP DEFAULT current_timestamp,
+    RowCreate TIMESTAMP DEFAULT current_timestamp,
+    RowEvent VARCHAR(255),
+    PRIMARY KEY (SkillId)
+);
+
+-- UserSkill Table
+CREATE TABLE UserSkill (
+    UserSkillId INT NOT NULL,
+    UserMasterId INT NOT NULL,
+    SkillId INT NOT NULL,
+    SkillLevel INT,
+    RowUpdate TIMESTAMP DEFAULT current_timestamp,
+    RowCreate TIMESTAMP DEFAULT current_timestamp,
+    RowEvent VARCHAR(255),
+    PRIMARY KEY (UserSkillId),
+    FOREIGN KEY (UserMasterId) REFERENCES UserMaster(UserMasterId),
+    FOREIGN KEY (SkillId) REFERENCES SkillMaster(SkillId)
+);
+
+-- UserCompanySite Table
+CREATE TABLE UserCompanySite (
+    UserCompanySiteId INT NOT NULL,
+    UserMasterId INT NOT NULL,
+    CompanySiteId INT NOT NULL,
+    Role VARCHAR(50),
+    RowUpdate TIMESTAMP DEFAULT current_timestamp,
+    RowCreate TIMESTAMP DEFAULT current_timestamp,
+    RowEvent VARCHAR(255),
+    PRIMARY KEY (UserCompanySiteId),
+    FOREIGN KEY (UserMasterId) REFERENCES UserMaster(UserMasterId),
+    FOREIGN KEY (CompanySiteId) REFERENCES CompanySiteMaster(CompanySiteId)
+);
+
+-- AWMTablePRelease Table
+CREATE TABLE AWMTablePRelease (
+    TablePReleaseId INT NOT NULL,
+    TableName VARCHAR(100) NOT NULL,
+    ReleaseDate TIMESTAMP,
+    RowUpdate TIMESTAMP DEFAULT current_timestamp,
+    RowCreate TIMESTAMP DEFAULT current_timestamp,
+    RowEvent VARCHAR(255),
+    PRIMARY KEY (TablePReleaseId)
+);
+
+-- AWMTableReleased Table
+CREATE TABLE AWMTableReleased (
+    TableReleasedId INT NOT NULL,
+    TableName VARCHAR(100) NOT NULL,
+    ReleaseDate TIMESTAMP,
+    RowUpdate TIMESTAMP DEFAULT current_timestamp,
+    RowCreate TIMESTAMP DEFAULT current_timestamp,
+    RowEvent VARCHAR(255),
+    PRIMARY KEY (TableReleasedId)
+);
+
+-- AWMColumnPRelease Table
+CREATE TABLE AWMColumnPRelease (
+    ColumnPReleaseId INT NOT NULL,
+    ColumnName VARCHAR(100) NOT NULL,
+    TablePReleaseId INT NOT NULL,
+    RowUpdate TIMESTAMP DEFAULT current_timestamp,
+    RowCreate TIMESTAMP DEFAULT current_timestamp,
+    RowEvent VARCHAR(255),
+    PRIMARY KEY (ColumnPReleaseId),
+    FOREIGN KEY (TablePReleaseId) REFERENCES AWMTablePRelease(TablePReleaseId)
+);
+
+-- AWMColumnReleased Table
+CREATE TABLE AWMColumnReleased (
+    ColumnReleasedId INT NOT NULL,
+    ColumnName VARCHAR(100) NOT NULL,
+    TableReleasedId INT NOT NULL,
+    RowUpdate TIMESTAMP DEFAULT current_timestamp,
+    RowCreate TIMESTAMP DEFAULT current_timestamp,
+    RowEvent VARCHAR(255),
+    PRIMARY KEY (ColumnReleasedId),
+    FOREIGN KEY (TableReleasedId) REFERENCES AWMTableReleased(TableReleasedId)
+);
+
+-- CompanySiteMaster Table
+CREATE TABLE CompanySiteMaster (
+    CompanySiteId INT NOT NULL,
+    CompanySiteName VARCHAR(100) NOT NULL,
+    Location VARCHAR(255),
+    RowUpdate TIMESTAMP DEFAULT current_timestamp,
+    RowCreate TIMESTAMP DEFAULT current_timestamp,
+    RowEvent VARCHAR(255),
+    PRIMARY KEY (CompanySiteId)
+);
+
+-- ConditionMaster Table
+CREATE TABLE ConditionMaster (
+    ConditionId INT NOT NULL,
+    ConditionName VARCHAR(100) NOT NULL,
+    Description TEXT,
+    RowUpdate TIMESTAMP DEFAULT current_timestamp,
+    RowCreate TIMESTAMP DEFAULT current_timestamp,
+    RowEvent VARCHAR(255),
+    PRIMARY KEY (ConditionId)
+);
+
+-- ShiftMaster Table
+CREATE TABLE ShiftMaster (
+    ShiftId INT NOT NULL,
+    ShiftName VARCHAR(100) NOT NULL,
+    StartTime TIME NOT NULL,
+    EndTime TIME NOT NULL,
+    RowUpdate TIMESTAMP DEFAULT current_timestamp,
+    RowCreate TIMESTAMP DEFAULT current_timestamp,
+    RowEvent VARCHAR(255),
+    PRIMARY KEY (ShiftId)
+);
+
+-- SequenceMaster Table
+CREATE TABLE SequenceMaster (
+    SequenceId INT NOT NULL,
+    SequenceName VARCHAR(100) NOT NULL,
+    SequenceOrder INT NOT NULL,
+    RowUpdate TIMESTAMP DEFAULT current_timestamp,
+    RowCreate TIMESTAMP DEFAULT current_timestamp,
+    RowEvent VARCHAR(255),
+    PRIMARY KEY (SequenceId)
+);

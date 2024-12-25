@@ -1,5 +1,5 @@
 // ToastUtils.js
-import { toast, ToastOptions, ToastPosition } from 'react-toastify';
+import { toast, ToastPosition } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const showToast = (message : any, isSuccess = true, duration = 2000, shouldPause = true) => {
