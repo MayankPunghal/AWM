@@ -29,7 +29,7 @@ export const registerUser = async (user: {
 
 export const getUsers = async (page: number, size: number) => {
   const axiosInstance = getAxiosInstance('user-management-api')
-  const response = await axiosInstance.get(`/users?page=${page}&size=${size}`);
+  const response = await axiosInstance.get(`/getusers?page=${page}&size=${size}`);
   return response.data;
 };
 
@@ -45,7 +45,7 @@ export const loginUser = async (Username: string, Password: string) => {
   const axiosInstance = getAxiosInstance('user-management-api')
   const response = await axiosInstance.post(`/loginbyusername`, { Username, Password });
   console.log("response", response);
-  return response.data.access_token;
+  return response.data.token;
 };
 
 export const checkApiHealth = async () => {

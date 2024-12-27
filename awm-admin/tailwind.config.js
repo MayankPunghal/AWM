@@ -9,6 +9,9 @@ module.exports = {
         customBlue: "#1D4ED8",
         customGray: "#6B7280",
       },
+      animation:{
+        'loader-spin': 'spin 3s linear infinite',
+      }
     },
   },
   plugins: [],
