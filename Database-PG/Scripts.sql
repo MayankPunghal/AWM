@@ -27,7 +27,7 @@ CREATE TABLE UserMaster (
     UpdateBy VARCHAR(128) NOT NULL,  -- Mandatory column
     rcreate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was created
     rupdate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was updated
-    revent VARCHAR(255);  -- to store any event corresponding to that row
+    revent VARCHAR(255), -- to store any event corresponding to that row
 
     CONSTRAINT FK_Manager FOREIGN KEY (ManagerId) REFERENCES UserMaster(ProfileId)  -- Foreign Key for ManagerId
 );
@@ -46,7 +46,7 @@ CREATE TABLE LoginTracking (
     SessionDuration INT NULL,  -- Optional column (Session duration in ms)
     rcreate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was created
     rupdate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was updated
-    revent VARCHAR(255);  -- to store any event corresponding to that row
+    revent VARCHAR(255),  -- to store any event corresponding to that row
     CONSTRAINT FK_Profile FOREIGN KEY (ProfileId) REFERENCES UserMaster(ProfileId)  -- Foreign key relation to UserMaster
 );
 
@@ -71,10 +71,10 @@ CREATE TABLE RightMaster (
     CreatedDate TIMESTAMPTZ NOT NULL,  -- Mandatory column (PostgreSQL TIMESTAMPTZ)
     CreatedBy VARCHAR(128) NOT NULL,  -- Mandatory column
     LastUpdated TIMESTAMPTZ NOT NULL,  -- Mandatory column (PostgreSQL TIMESTAMPTZ)
-    UpdatedBy VARCHAR(128) NOT NULL  -- Mandatory column
+    UpdatedBy VARCHAR(128) NOT NULL,  -- Mandatory column
     rcreate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was created
     rupdate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was updated
-    revent VARCHAR(255);  -- to store any event corresponding to that row
+    revent VARCHAR(255)  -- to store any event corresponding to that row
 );
 
 
@@ -87,10 +87,10 @@ CREATE TABLE ConditionMaster (
     CreatedDate TIMESTAMPTZ NOT NULL,  -- Mandatory column (PostgreSQL TIMESTAMPTZ)
     CreatedBy VARCHAR(128) NOT NULL,  -- Mandatory column
     LastUpdated TIMESTAMPTZ NOT NULL,  -- Mandatory column (PostgreSQL TIMESTAMPTZ)
-    UpdatedBy VARCHAR(128) NOT NULL  -- Mandatory column
+    UpdatedBy VARCHAR(128) NOT NULL,  -- Mandatory column
     rcreate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was created
     rupdate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was updated
-    revent VARCHAR(255);  -- to store any event corresponding to that row
+    revent VARCHAR(255)  -- to store any event corresponding to that row
 );
 
 CREATE TABLE ShiftMaster (
@@ -103,10 +103,10 @@ CREATE TABLE ShiftMaster (
     CreatedDate TIMESTAMPTZ NOT NULL,  -- Mandatory column (PostgreSQL TIMESTAMPTZ)
     CreatedBy VARCHAR(128) NOT NULL,  -- Mandatory column for the user who created the record
     LastUpdated TIMESTAMPTZ NOT NULL,  -- Mandatory column (PostgreSQL TIMESTAMPTZ)
-    UpdatedBy VARCHAR(128) NOT NULL  -- Mandatory column for the user who last updated the record
+    UpdatedBy VARCHAR(128) NOT NULL,  -- Mandatory column for the user who last updated the record
     rcreate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was created
     rupdate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was updated
-    revent VARCHAR(255);  -- to store any event corresponding to that row
+    revent VARCHAR(255)  -- to store any event corresponding to that row
 );
 
 CREATE TABLE CompanySiteMaster (
@@ -122,10 +122,10 @@ CREATE TABLE CompanySiteMaster (
     CreatedDate TIMESTAMPTZ NOT NULL,  -- Mandatory column (PostgreSQL TIMESTAMPTZ)
     CreatedBy VARCHAR(128) NOT NULL,  -- Mandatory column for the user who created the record
     LastUpdated TIMESTAMPTZ NOT NULL,  -- Mandatory column (PostgreSQL TIMESTAMPTZ)
-    UpdatedBy VARCHAR(128) NOT NULL  -- Mandatory column for the user who last updated the record
+    UpdatedBy VARCHAR(128) NOT NULL,  -- Mandatory column for the user who last updated the record
     rcreate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was created
     rupdate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was updated
-    revent VARCHAR(255);  -- to store any event corresponding to that row
+    revent VARCHAR(255)  -- to store any event corresponding to that row
 );
 
 CREATE TABLE SkillMaster (
@@ -137,10 +137,10 @@ CREATE TABLE SkillMaster (
     CreatedDate TIMESTAMPTZ NOT NULL,  -- Mandatory column for creation date
     CreatedBy VARCHAR(128) NOT NULL,  -- Mandatory column for the user who created the record
     LastUpdated TIMESTAMPTZ NOT NULL,  -- Mandatory column for last updated date
-    UpdatedBy VARCHAR(128) NOT NULL  -- Mandatory column for the user who last updated the record
+    UpdatedBy VARCHAR(128) NOT NULL,  -- Mandatory column for the user who last updated the record
     rcreate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was created
     rupdate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was updated
-    revent VARCHAR(255);  -- to store any event corresponding to that row
+    revent VARCHAR(255) -- to store any event corresponding to that row
 );
 
 CREATE TABLE AccessGroupRight (
@@ -170,7 +170,7 @@ CREATE TABLE UserSkill (
     UpdatedBy VARCHAR(128) NOT NULL,  -- Mandatory column for the user who last updated the record
     rcreate TIMESTAMPTZTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was created
     rupdate TIMESTAMPTZTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was updated
-    revent VARCHAR(255);  -- to store any event corresponding to that row
+    revent VARCHAR(255),  -- to store any event corresponding to that row
     CONSTRAINT fk_user FOREIGN KEY (UserId) REFERENCES UserMaster(ProfileId),  -- Foreign key constraint to UserMaster table
     CONSTRAINT fk_skill_master FOREIGN KEY (SkillMasterId) REFERENCES SkillMaster(SkillMasterId)  -- Foreign key constraint to SkillMaster table
 );
@@ -186,7 +186,7 @@ CREATE TABLE UserCompanySite (
     UpdatedBy VARCHAR(128) NOT NULL,  -- Mandatory column for the user who last updated the record
     rcreate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was created
     rupdate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was updated
-    revent VARCHAR(255);  -- to store any event corresponding to that row
+    revent VARCHAR(255),  -- to store any event corresponding to that row
     CONSTRAINT fk_user FOREIGN KEY (UserId) REFERENCES UserMaster(ProfileId)  -- Foreign key constraint to UserMaster table
 );
 
