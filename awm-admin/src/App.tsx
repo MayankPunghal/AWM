@@ -24,9 +24,9 @@ const AppWithNavbar: React.FC = () => {
 const App: React.FC = () => {
   return (
       <Router>
-        <HealthCheck>
+        {/* <HealthCheck> */}
           <AppWithNavbar />
-        </HealthCheck>
+        {/* </HealthCheck> */}
       </Router>
   );
 };

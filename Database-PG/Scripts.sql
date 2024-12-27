@@ -1,193 +1,192 @@
--- Full table schema with additional columns
-
--- LoginTracking Table
-CREATE TABLE LoginTracking (
-    LoginTrackingId BIGINT NOT NULL,
-    UserMasterId INT NOT NULL,
-    UserName VARCHAR(50) NOT NULL,
-    LoginTriedIP VARCHAR(255),
-    LoginTriedOn TIMESTAMP NOT NULL,
-    RowUpdate TIMESTAMP DEFAULT current_timestamp,
-    RowCreate TIMESTAMP DEFAULT current_timestamp,
-    RowEvent VARCHAR(255),
-    PRIMARY KEY (LoginTrackingId),
-    FOREIGN KEY (UserMasterId) REFERENCES UserMaster(UserMasterId)
-);
-
--- UserMaster Table
 CREATE TABLE UserMaster (
-    UserMasterId INT NOT NULL,
-    UserName VARCHAR(50) NOT NULL,
-    UserEmail VARCHAR(100) NOT NULL,
-    PasswordHash VARCHAR(255) NOT NULL,
-    Role VARCHAR(50) NOT NULL,
-    RowUpdate TIMESTAMP DEFAULT current_timestamp,
-    RowCreate TIMESTAMP DEFAULT current_timestamp,
-    RowEvent VARCHAR(255),
-    PRIMARY KEY (UserMasterId)
+    ProfileId INT NOT NULL PRIMARY KEY,  -- Primary key column
+    UserName VARCHAR(50) NOT NULL,  -- Mandatory column
+    FirstName VARCHAR(50) NOT NULL,  -- Mandatory column
+    MiddleName VARCHAR(50) NULL,  -- Optional column
+    LastName VARCHAR(50) NULL,  -- Optional column
+    DisplayName VARCHAR(100) NOT NULL,  -- Mandatory column
+    ContactNo VARCHAR(20) NOT NULL,  -- Mandatory column
+    ContactNo1 VARCHAR(20) NULL,  -- Optional column
+    AddressLine1 VARCHAR(20) NOT NULL,  -- Mandatory column
+    AddressLine2 VARCHAR(20) NULL,  -- Optional column
+    AddressLine3 VARCHAR(20) NULL,  -- Optional column
+    City VARCHAR(20) NOT NULL,  -- Mandatory column
+    State VARCHAR(20) NULL,  -- Optional column
+    District VARCHAR(20) NULL,  -- Optional column
+    Town VARCHAR(20) NULL,  -- Optional column
+    Country VARCHAR(20) NOT NULL,  -- Mandatory column
+    ZipCode VARCHAR(20) NOT NULL,  -- Mandatory column
+    ManagerId INT NULL,  -- Optional column, could be a foreign key
+    ManagerName VARCHAR(100) NULL,  -- Optional column
+    Password VARCHAR(100) NOT NULL,  -- Mandatory column
+    EmailId VARCHAR(100) NULL,  -- Optional column
+    MFAToken VARCHAR(20) NULL,  -- Optional column
+    CreatedDate TIMESTAMPTZ NOT NULL,  -- Mandatory column (PostgreSQL TIMESTAMPTZ)
+    CreatedBy VARCHAR(128) NOT NULL,  -- Mandatory column
+    LastUpdated TIMESTAMPTZ NOT NULL,  -- Mandatory column (PostgreSQL TIMESTAMPTZ)
+    UpdateBy VARCHAR(128) NOT NULL,  -- Mandatory column
+    rcreate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was created
+    rupdate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was updated
+    revent VARCHAR(255);  -- to store any event corresponding to that row
+
+    CONSTRAINT FK_Manager FOREIGN KEY (ManagerId) REFERENCES UserMaster(ProfileId)  -- Foreign Key for ManagerId
 );
 
--- UserAccessGroupMaster Table
+CREATE TABLE LoginTracking (
+    LoginTrackingId BIGINT NOT NULL PRIMARY KEY,  -- Primary key column
+    ProfileId INT NOT NULL,  -- Mandatory column
+    UserName VARCHAR(50) NOT NULL,  -- Mandatory column
+    LoginTriedIP VARCHAR(50) NULL,  -- Optional column
+    LoginTriedOn TIMESTAMPTZ NOT NULL,  -- Mandatory column (PostgreSQL TIMESTAMPTZ)
+    LoginResult VARCHAR(512) NOT NULL,  -- Mandatory column
+    SessionActive BOOLEAN NOT NULL,  -- Mandatory column (PostgreSQL BOOLEAN)
+    SessionStartOn TIMESTAMPTZ NOT NULL,  -- Mandatory column (PostgreSQL TIMESTAMPTZ)
+    SessionEndOn TIMESTAMPTZ NULL,  -- Optional column (PostgreSQL TIMESTAMPTZ)
+    SessionId INT NOT NULL,  -- Mandatory column
+    SessionDuration INT NULL,  -- Optional column (Session duration in ms)
+    rcreate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was created
+    rupdate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was updated
+    revent VARCHAR(255);  -- to store any event corresponding to that row
+    CONSTRAINT FK_Profile FOREIGN KEY (ProfileId) REFERENCES UserMaster(ProfileId)  -- Foreign key relation to UserMaster
+);
+
 CREATE TABLE UserAccessGroupMaster (
-    AccessGroupId INT NOT NULL,
-    AccessGroupName VARCHAR(100) NOT NULL,
-    Description TEXT,
-    RowUpdate TIMESTAMP DEFAULT current_timestamp,
-    RowCreate TIMESTAMP DEFAULT current_timestamp,
-    RowEvent VARCHAR(255),
-    PRIMARY KEY (AccessGroupId)
+    UserAccessGroupId BIGINT NOT NULL PRIMARY KEY,  -- Primary key column
+    AccessGroupName VARCHAR(128) NOT NULL,  -- Mandatory column
+    Description VARCHAR(100) NULL,  -- Optional column
+    CreatedDate TIMESTAMPTZ NOT NULL,  -- Mandatory column (PostgreSQL TIMESTAMPTZ)
+    CreatedBy VARCHAR(20) NOT NULL,  -- Mandatory column
+    LastUpdated TIMESTAMPTZ NOT NULL,  -- Mandatory column (PostgreSQL TIMESTAMPTZ)
+    UpdatedBy VARCHAR(20) NOT NULL  -- Mandatory column
 );
 
--- RightMaster Table
 CREATE TABLE RightMaster (
-    RightId INT NOT NULL,
-    RightName VARCHAR(100) NOT NULL,
-    Description TEXT,
-    RowUpdate TIMESTAMP DEFAULT current_timestamp,
-    RowCreate TIMESTAMP DEFAULT current_timestamp,
-    RowEvent VARCHAR(255),
-    PRIMARY KEY (RightId)
+    RightMasterId BIGINT NOT NULL PRIMARY KEY,  -- Primary key column
+    RightName VARCHAR(255) NOT NULL,  -- Mandatory column
+    Description VARCHAR(100) NULL,  -- Optional column
+    Platform VARCHAR(255) NULL,  -- Optional column
+    Active BOOLEAN NOT NULL,  -- Mandatory column (BOOLEAN type for active flag)
+    CompanyCode VARCHAR(50) NULL,  -- Optional column
+    SiteCode VARCHAR(50) NULL,  -- Optional column
+    CreatedDate TIMESTAMPTZ NOT NULL,  -- Mandatory column (PostgreSQL TIMESTAMPTZ)
+    CreatedBy VARCHAR(128) NOT NULL,  -- Mandatory column
+    LastUpdated TIMESTAMPTZ NOT NULL,  -- Mandatory column (PostgreSQL TIMESTAMPTZ)
+    UpdatedBy VARCHAR(128) NOT NULL  -- Mandatory column
+    rcreate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was created
+    rupdate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was updated
+    revent VARCHAR(255);  -- to store any event corresponding to that row
 );
 
--- AccessGroupRight Table
-CREATE TABLE AccessGroupRight (
-    AccessGroupRightId INT NOT NULL,
-    AccessGroupId INT NOT NULL,
-    RightId INT NOT NULL,
-    RowUpdate TIMESTAMP DEFAULT current_timestamp,
-    RowCreate TIMESTAMP DEFAULT current_timestamp,
-    RowEvent VARCHAR(255),
-    PRIMARY KEY (AccessGroupRightId),
-    FOREIGN KEY (AccessGroupId) REFERENCES UserAccessGroupMaster(AccessGroupId),
-    FOREIGN KEY (RightId) REFERENCES RightMaster(RightId)
-);
 
--- SkillMaster Table
-CREATE TABLE SkillMaster (
-    SkillId INT NOT NULL,
-    SkillName VARCHAR(100) NOT NULL,
-    SkillDescription TEXT,
-    RowUpdate TIMESTAMP DEFAULT current_timestamp,
-    RowCreate TIMESTAMP DEFAULT current_timestamp,
-    RowEvent VARCHAR(255),
-    PRIMARY KEY (SkillId)
-);
-
--- UserSkill Table
-CREATE TABLE UserSkill (
-    UserSkillId INT NOT NULL,
-    UserMasterId INT NOT NULL,
-    SkillId INT NOT NULL,
-    SkillLevel INT,
-    RowUpdate TIMESTAMP DEFAULT current_timestamp,
-    RowCreate TIMESTAMP DEFAULT current_timestamp,
-    RowEvent VARCHAR(255),
-    PRIMARY KEY (UserSkillId),
-    FOREIGN KEY (UserMasterId) REFERENCES UserMaster(UserMasterId),
-    FOREIGN KEY (SkillId) REFERENCES SkillMaster(SkillId)
-);
-
--- UserCompanySite Table
-CREATE TABLE UserCompanySite (
-    UserCompanySiteId INT NOT NULL,
-    UserMasterId INT NOT NULL,
-    CompanySiteId INT NOT NULL,
-    Role VARCHAR(50),
-    RowUpdate TIMESTAMP DEFAULT current_timestamp,
-    RowCreate TIMESTAMP DEFAULT current_timestamp,
-    RowEvent VARCHAR(255),
-    PRIMARY KEY (UserCompanySiteId),
-    FOREIGN KEY (UserMasterId) REFERENCES UserMaster(UserMasterId),
-    FOREIGN KEY (CompanySiteId) REFERENCES CompanySiteMaster(CompanySiteId)
-);
-
--- AWMTablePRelease Table
-CREATE TABLE AWMTablePRelease (
-    TablePReleaseId INT NOT NULL,
-    TableName VARCHAR(100) NOT NULL,
-    ReleaseDate TIMESTAMP,
-    RowUpdate TIMESTAMP DEFAULT current_timestamp,
-    RowCreate TIMESTAMP DEFAULT current_timestamp,
-    RowEvent VARCHAR(255),
-    PRIMARY KEY (TablePReleaseId)
-);
-
--- AWMTableReleased Table
-CREATE TABLE AWMTableReleased (
-    TableReleasedId INT NOT NULL,
-    TableName VARCHAR(100) NOT NULL,
-    ReleaseDate TIMESTAMP,
-    RowUpdate TIMESTAMP DEFAULT current_timestamp,
-    RowCreate TIMESTAMP DEFAULT current_timestamp,
-    RowEvent VARCHAR(255),
-    PRIMARY KEY (TableReleasedId)
-);
-
--- AWMColumnPRelease Table
-CREATE TABLE AWMColumnPRelease (
-    ColumnPReleaseId INT NOT NULL,
-    ColumnName VARCHAR(100) NOT NULL,
-    TablePReleaseId INT NOT NULL,
-    RowUpdate TIMESTAMP DEFAULT current_timestamp,
-    RowCreate TIMESTAMP DEFAULT current_timestamp,
-    RowEvent VARCHAR(255),
-    PRIMARY KEY (ColumnPReleaseId),
-    FOREIGN KEY (TablePReleaseId) REFERENCES AWMTablePRelease(TablePReleaseId)
-);
-
--- AWMColumnReleased Table
-CREATE TABLE AWMColumnReleased (
-    ColumnReleasedId INT NOT NULL,
-    ColumnName VARCHAR(100) NOT NULL,
-    TableReleasedId INT NOT NULL,
-    RowUpdate TIMESTAMP DEFAULT current_timestamp,
-    RowCreate TIMESTAMP DEFAULT current_timestamp,
-    RowEvent VARCHAR(255),
-    PRIMARY KEY (ColumnReleasedId),
-    FOREIGN KEY (TableReleasedId) REFERENCES AWMTableReleased(TableReleasedId)
-);
-
--- CompanySiteMaster Table
-CREATE TABLE CompanySiteMaster (
-    CompanySiteId INT NOT NULL,
-    CompanySiteName VARCHAR(100) NOT NULL,
-    Location VARCHAR(255),
-    RowUpdate TIMESTAMP DEFAULT current_timestamp,
-    RowCreate TIMESTAMP DEFAULT current_timestamp,
-    RowEvent VARCHAR(255),
-    PRIMARY KEY (CompanySiteId)
-);
-
--- ConditionMaster Table
 CREATE TABLE ConditionMaster (
-    ConditionId INT NOT NULL,
-    ConditionName VARCHAR(100) NOT NULL,
-    Description TEXT,
-    RowUpdate TIMESTAMP DEFAULT current_timestamp,
-    RowCreate TIMESTAMP DEFAULT current_timestamp,
-    RowEvent VARCHAR(255),
-    PRIMARY KEY (ConditionId)
+    ConditionMasterId BIGINT NOT NULL PRIMARY KEY,  -- Primary key column
+    ConditionName VARCHAR(255) NOT NULL,  -- Mandatory column
+    Description TEXT NULL,  -- Optional column for detailed description
+    AppliesToObject VARCHAR(255) NULL,  -- Optional column indicating object the condition applies to
+    WhereClause TEXT NULL,  -- Optional column for SQL-like WHERE clause
+    CreatedDate TIMESTAMPTZ NOT NULL,  -- Mandatory column (PostgreSQL TIMESTAMPTZ)
+    CreatedBy VARCHAR(128) NOT NULL,  -- Mandatory column
+    LastUpdated TIMESTAMPTZ NOT NULL,  -- Mandatory column (PostgreSQL TIMESTAMPTZ)
+    UpdatedBy VARCHAR(128) NOT NULL  -- Mandatory column
+    rcreate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was created
+    rupdate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was updated
+    revent VARCHAR(255);  -- to store any event corresponding to that row
 );
 
--- ShiftMaster Table
 CREATE TABLE ShiftMaster (
-    ShiftId INT NOT NULL,
-    ShiftName VARCHAR(100) NOT NULL,
-    StartTime TIME NOT NULL,
-    EndTime TIME NOT NULL,
-    RowUpdate TIMESTAMP DEFAULT current_timestamp,
-    RowCreate TIMESTAMP DEFAULT current_timestamp,
-    RowEvent VARCHAR(255),
-    PRIMARY KEY (ShiftId)
+    ShiftMasterId BIGINT NOT NULL PRIMARY KEY,  -- Primary key column
+    ShiftName VARCHAR(100) NOT NULL,  -- Mandatory column for the shift name
+    ShiftStart TIME NOT NULL,  -- Mandatory column for the shift start time
+    CompanyCode VARCHAR(50) NULL,  -- Optional column for the company code
+    SiteCode VARCHAR(50) NULL,  -- Optional column for the site code
+    Status VARCHAR(20) NULL,  -- Optional column for the shift status (e.g., Active, Inactive)
+    CreatedDate TIMESTAMPTZ NOT NULL,  -- Mandatory column (PostgreSQL TIMESTAMPTZ)
+    CreatedBy VARCHAR(128) NOT NULL,  -- Mandatory column for the user who created the record
+    LastUpdated TIMESTAMPTZ NOT NULL,  -- Mandatory column (PostgreSQL TIMESTAMPTZ)
+    UpdatedBy VARCHAR(128) NOT NULL  -- Mandatory column for the user who last updated the record
+    rcreate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was created
+    rupdate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was updated
+    revent VARCHAR(255);  -- to store any event corresponding to that row
 );
 
--- SequenceMaster Table
-CREATE TABLE SequenceMaster (
-    SequenceId INT NOT NULL,
-    SequenceName VARCHAR(100) NOT NULL,
-    SequenceOrder INT NOT NULL,
-    RowUpdate TIMESTAMP DEFAULT current_timestamp,
-    RowCreate TIMESTAMP DEFAULT current_timestamp,
-    RowEvent VARCHAR(255),
-    PRIMARY KEY (SequenceId)
+CREATE TABLE CompanySiteMaster (
+    CompanySiteMasterId BIGINT NOT NULL PRIMARY KEY,  -- Primary key column
+    Description TEXT NULL,  -- Optional column for a description of the site
+    CompanySite VARCHAR(255) NULL,  -- Optional column for the name of the company site
+    CompanyCode VARCHAR(50) NULL,  -- Optional column for the company code
+    CompanyName VARCHAR(255) NULL,  -- Optional column for the company name
+    SiteCode VARCHAR(50) NULL,  -- Optional column for the site code
+    SiteName VARCHAR(255) NULL,  -- Optional column for the site name
+    Active BOOLEAN DEFAULT TRUE,  -- Optional column for the status, defaults to TRUE (Active)
+    SequenceNo INT NULL,  -- Optional column for the sequence number of the site
+    CreatedDate TIMESTAMPTZ NOT NULL,  -- Mandatory column (PostgreSQL TIMESTAMPTZ)
+    CreatedBy VARCHAR(128) NOT NULL,  -- Mandatory column for the user who created the record
+    LastUpdated TIMESTAMPTZ NOT NULL,  -- Mandatory column (PostgreSQL TIMESTAMPTZ)
+    UpdatedBy VARCHAR(128) NOT NULL  -- Mandatory column for the user who last updated the record
+    rcreate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was created
+    rupdate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was updated
+    revent VARCHAR(255);  -- to store any event corresponding to that row
 );
+
+CREATE TABLE SkillMaster (
+    SkillMasterId BIGINT NOT NULL PRIMARY KEY,  -- Primary key column
+    SkillName VARCHAR(255) NOT NULL,  -- Mandatory column for skill name
+    Description VARCHAR(100) NULL,  -- Optional column for skill description
+    CompanyCode VARCHAR(50) NULL,  -- Optional column for company code
+    SiteCode VARCHAR(50) NULL,  -- Optional column for site code
+    CreatedDate TIMESTAMPTZ NOT NULL,  -- Mandatory column for creation date
+    CreatedBy VARCHAR(128) NOT NULL,  -- Mandatory column for the user who created the record
+    LastUpdated TIMESTAMPTZ NOT NULL,  -- Mandatory column for last updated date
+    UpdatedBy VARCHAR(128) NOT NULL  -- Mandatory column for the user who last updated the record
+    rcreate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was created
+    rupdate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was updated
+    revent VARCHAR(255);  -- to store any event corresponding to that row
+);
+
+CREATE TABLE AccessGroupRight (
+    AccessGroupRightId BIGINT NOT NULL PRIMARY KEY,  -- Primary key column
+    UserAccessGroupId BIGINT NOT NULL,  -- Foreign key to UserAccessGroupMaster table
+    RightMasterId BIGINT NOT NULL,  -- Foreign key to RightMaster table
+    ConditionMasterId BIGINT NOT NULL,  -- Foreign key to ConditionMaster table
+    CreatedDate TIMESTAMPTZ NOT NULL,  -- Mandatory column for creation date
+    CreatedBy VARCHAR(128) NOT NULL,  -- Mandatory column for the user who created the record
+    LastUpdated TIMESTAMPTZ NOT NULL,  -- Mandatory column for last updated date
+    UpdatedBy VARCHAR(128) NOT NULL,  -- Mandatory column for the user who last updated the record
+    rcreate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was created
+    rupdate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was updated
+    revent VARCHAR(255),  -- to store any event corresponding to that row
+    CONSTRAINT fk_user_access_group FOREIGN KEY (UserAccessGroupId) REFERENCES UserAccessGroupMaster(UserAccessGroupId),  -- Foreign key constraint
+    CONSTRAINT fk_right_master FOREIGN KEY (RightMasterId) REFERENCES RightMaster(RightMasterId),  -- Foreign key constraint
+    CONSTRAINT fk_condition_master FOREIGN KEY (ConditionMasterId) REFERENCES ConditionMaster(ConditionMasterId)  -- Foreign key constraint
+);
+
+CREATE TABLE UserSkill (
+    UserSkillId BIGINT NOT NULL PRIMARY KEY,  -- Primary key column
+    UserId INT NOT NULL,  -- Foreign key to UserMaster table
+    SkillMasterId BIGINT NOT NULL,  -- Foreign key to SkillMaster table
+    CreatedDate TIMESTAMPTZ NOT NULL,  -- Mandatory column for creation date
+    CreatedBy VARCHAR(128) NOT NULL,  -- Mandatory column for the user who created the record
+    LastUpdated TIMESTAMPTZ NOT NULL,  -- Mandatory column for last updated date
+    UpdatedBy VARCHAR(128) NOT NULL,  -- Mandatory column for the user who last updated the record
+    rcreate TIMESTAMPTZTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was created
+    rupdate TIMESTAMPTZTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was updated
+    revent VARCHAR(255);  -- to store any event corresponding to that row
+    CONSTRAINT fk_user FOREIGN KEY (UserId) REFERENCES UserMaster(ProfileId),  -- Foreign key constraint to UserMaster table
+    CONSTRAINT fk_skill_master FOREIGN KEY (SkillMasterId) REFERENCES SkillMaster(SkillMasterId)  -- Foreign key constraint to SkillMaster table
+);
+
+CREATE TABLE UserCompanySite (
+    UserCompanySiteId BIGINT NOT NULL PRIMARY KEY,  -- Primary key column
+    UserId INT NOT NULL,  -- Foreign key to UserMaster table
+    CompanyCode VARCHAR(50) NOT NULL,  -- Mandatory column for company code
+    SiteCode VARCHAR(50) NOT NULL,  -- Mandatory column for site code
+    CreatedDate TIMESTAMPTZ NOT NULL,  -- Mandatory column for creation date
+    CreatedBy VARCHAR(128) NOT NULL,  -- Mandatory column for the user who created the record
+    LastUpdated TIMESTAMPTZ NOT NULL,  -- Mandatory column for last updated date
+    UpdatedBy VARCHAR(128) NOT NULL,  -- Mandatory column for the user who last updated the record
+    rcreate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was created
+    rupdate TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMPTZ,  -- to store when row was updated
+    revent VARCHAR(255);  -- to store any event corresponding to that row
+    CONSTRAINT fk_user FOREIGN KEY (UserId) REFERENCES UserMaster(ProfileId)  -- Foreign key constraint to UserMaster table
+);
+

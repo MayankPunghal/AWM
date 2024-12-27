@@ -6,13 +6,13 @@ import { showToast } from "../utils/ToastUtil";
 import { jwtDecode } from "../utils/JwtDecode";
 
 const LoginPage: React.FC = () => {
-  const [username, setUsername] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
+  const [Username, setUsername] = useState<string>("");
+  const [Password, setPassword] = useState<string>("");
   const navigate = useNavigate();
 
   const handleLogin = async () => {
     try {
-      const token = await loginUser(username, password);
+      const token = await loginUser(Username, Password);
       showToast("Welcome Back", true, 2000, false);
       localStorage.setItem("token", token);
       const decodedToken: any = jwtDecode(token);
@@ -35,14 +35,14 @@ const LoginPage: React.FC = () => {
         <input
           type="text"
           placeholder="Username"
-          value={username}
+          value={Username}
           onChange={(e) => setUsername(e.target.value)}
           className="p-2 border border-gray-300 rounded mb-2 w-full"
         />
         <input
           type="password"
           placeholder="Password"
-          value={password}
+          value={Password}
           onChange={(e) => setPassword(e.target.value)}
           className="p-2 border border-gray-300 rounded mb-4 w-full"
         />
