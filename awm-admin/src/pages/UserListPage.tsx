@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { getUsers, getUsersWithSearch } from "../services/userService";
 import UserTable from "../components/UserTable";
-import ColumnSelector from "../components/ColumnSelector";
 import Spinner from "../components/Spinner";
 
 const UserListPage: React.FC = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [pageSize] = useState(10); // Default page size
+  const [pageSize] = useState(1000); // Default page size
   const [totalUsers, setTotalUsers] = useState(0);
   const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -15,13 +14,12 @@ const UserListPage: React.FC = () => {
 
   const fetchUsers = async () => {
     try {
-      setUsers([]);
       setLoading(true);
-      const response = await getUsersWithSearch(currentPage, pageSize, searchQuery);
-      setUsers(response.data);
-      setTotalUsers(response.total);
-      if (response.data.length > 0 && selectedColumns.length === 0) {
-        setSelectedColumns(Object.keys(response.data[0]));
+      const response = await getUsers(currentPage, pageSize);
+      setUsers(response.users);
+      setTotalUsers(response.totalCount);
+      if (response.users.length > 0 && selectedColumns.length === 0) {
+        setSelectedColumns(Object.keys(response.users[0]));
       }
     } catch (error) {
       console.error("Failed to fetch users:", error);
@@ -35,7 +33,7 @@ const UserListPage: React.FC = () => {
   useEffect(() => {
     if(searchQuery.length > 3 || searchQuery.length === 0)
     fetchUsers();
-  }, [currentPage, pageSize, searchQuery, selectedColumns.length]);
+  }, [currentPage, pageSize, searchQuery]);
 
   const totalPages = Math.ceil(totalUsers / pageSize);
 
@@ -81,14 +79,14 @@ const UserListPage: React.FC = () => {
         selectedColumns={selectedColumns}
         onChange={setSelectedColumns}
       /> */}
-
 {loading ? (
-        <Spinner />
-      ) : (
+        <Spinner />  
+      ) : (     
+        <></> 
+      )}
       <div className="overflow-auto">
         <UserTable users={users} selectedColumns={selectedColumns} />
       </div>
-      )}
       <div className="flex justify-between items-center mt-4">
         <button
           className="px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50"

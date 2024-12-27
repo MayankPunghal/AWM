@@ -1,10 +1,9 @@
 import React from "react";
 
-// Spinner Component using Tailwind CSS with dotted effect
 const Spinner: React.FC = () => {
   return (
-    <div className="flex justify-center items-center space-x-2">
-      <div className="w-8 h-8 border-4 border-dotted border-blue-500 rounded-full animate-spin"></div>
+    <div className="fixed inset-0 flex justify-center items-center bg-gray-500 bg-opacity-50 z-50 pointer-events-none">
+      <div className="w-24 h-24 border-8 border-dotted border-blue-500 rounded-full animate-loader-spin"></div>
     </div>
   );
 };

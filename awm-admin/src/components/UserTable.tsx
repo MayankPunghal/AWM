@@ -1,14 +1,15 @@
-import React from "react";
+import React, { memo } from "react";
 
 interface UserTableProps {
   users: any[];
   selectedColumns: string[];
 }
 
-const UserTable: React.FC<UserTableProps> = ({ users, selectedColumns }) => {
+const UserTable: React.FC<UserTableProps> = memo(({ users, selectedColumns }) => {
   if (users.length === 0) {
     return <p>No users available.</p>;
   }
+  console.log("Users data:", users);
 
   return (
     <div className="overflow-x-auto">
@@ -20,11 +21,11 @@ const UserTable: React.FC<UserTableProps> = ({ users, selectedColumns }) => {
                 {column.replace(/_/g, " ")}
               </th>
             ))}
-          </tr>
+            </tr>
         </thead>
         <tbody>
           {users.map((user) => (
-            <tr key={user.id} className="border-b">
+            <tr key={user.userId} className="border-b">
               {selectedColumns.map((column) => (
                 <td key={column} className="px-4 py-2 text-sm text-gray-900">
                   {typeof user[column] === 'boolean' ? (user[column] ? 'Yes' : 'No') : user[column]}
@@ -36,6 +37,6 @@ const UserTable: React.FC<UserTableProps> = ({ users, selectedColumns }) => {
       </table>
     </div>
   );
-};
+});
 
 export default UserTable;
