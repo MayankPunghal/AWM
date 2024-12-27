@@ -14,15 +14,16 @@ import { getAxiosInstance } from '../api/AxiosInstanceFactory';
 
 // Register user
 export const registerUser = async (user: {
-  username: string;
-  email: string;
-  password: string;
-  first_name: string;
-  last_name: string;
-  gender: string;
+  Username: string;
+  UserEmail: string;
+  Password: string;
+  FirstName: string;
+  LastName: string;
+  DisplayName: string;
+  ContactNo : number;
 }) => {
   const axiosInstance = getAxiosInstance('user-management-api');
-  const response = await axiosInstance.post(`/users/`, user);
+  const response = await axiosInstance.post(`/registeruser`, user);
   return response.data;
 };
 
@@ -40,9 +41,9 @@ export const getUsersWithSearch = async (page: number, size: number, search?: st
 };
 
 // Login user (JWT authentication)
-export const loginUser = async (username: string, password: string) => {
+export const loginUser = async (Username: string, Password: string) => {
   const axiosInstance = getAxiosInstance('user-management-api')
-  const response = await axiosInstance.post(`/login/`, { username, password });
+  const response = await axiosInstance.post(`/loginbyusername`, { Username, Password });
   console.log("response", response);
   return response.data.access_token;
 };
