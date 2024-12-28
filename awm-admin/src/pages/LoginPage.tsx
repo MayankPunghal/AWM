@@ -4,6 +4,7 @@ import { loginUser } from "../services/userService";
 import { useNavigate } from "react-router-dom";
 import { showToast } from "../utils/ToastUtil";
 import { jwtDecode } from "../utils/JwtDecode";
+import WithEnterSubmit from "../components/WithEnterSubmit";
 
 const LoginPage: React.FC = () => {
   const [Username, setUsername] = useState<string>("");
@@ -29,6 +30,7 @@ const LoginPage: React.FC = () => {
   };
 
   return (
+    <WithEnterSubmit onSubmit={handleLogin}>
     <div className="flex justify-center items-center h-screen">
       <div className="p-6 bg-white rounded shadow-md">
         <h2 className="text-2xl font-bold mb-4">Login</h2>
@@ -49,6 +51,7 @@ const LoginPage: React.FC = () => {
         <Button onClick={handleLogin}>Login</Button>
       </div>
     </div>
+    </WithEnterSubmit>
   );
 };
 

@@ -3,8 +3,9 @@ import axios from "axios";
 // Define service base URLs
 const SERVICE_BASE_URLS: { [key: string]: string } = {
   'user-management-api': process.env.REACT_APP_USER_MANAGEMENT_API_URL || '',
-  'order-management-api': process.env.REACT_APP_ORDER_MANAGEMENT_API_URL || '',
-  // Add more services as needed
+  'general-api': process.env.REACT_APP_GENERAL_API_URL || '',
+  'workorder-management-api': process.env.REACT_APP_WORKORDER_MANAGEMENT_API_URL || '',
+  
 };
 
 export const getAxiosInstance = (serviceName: string) => {

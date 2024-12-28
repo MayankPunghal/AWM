@@ -49,7 +49,7 @@ export const loginUser = async (Username: string, Password: string) => {
 };
 
 export const checkApiHealth = async () => {
-  const axiosInstance = getAxiosInstance('user-management-api')
-  const response = await axiosInstance.get(`/healthcheck`)
+  const axiosInstance = getAxiosInstance('general-api')
+  const response = await axiosInstance.get(`/checkhealth`)
   return response.data.status;
 }
