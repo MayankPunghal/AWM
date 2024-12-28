@@ -33,11 +33,18 @@ export const getUsers = async (page: number, size: number, searchQuery : string)
   return response.data;
 };
 
-export const getUsersWithSearch = async (page: number, size: number, search?: string) => {
-  // console.log(`/users_with_search?page=${page}&size=${size}${search ? `&search=${search}` : ''}`);
-  const axiosInstance = getAxiosInstance('user-management-api');
-  const response = await axiosInstance.get(`/users_with_search?page=${page}&size=${size}${search ? `&q=${search}` : ''}`);
-  return response.data;
+export const getUserById = async (userId: string) => {
+  try {
+    const axiosInstance = getAxiosInstance('user-management-api')
+    const response = await axiosInstance.get(`/getuserbyid?id=${userId}`);
+    if (!response.data) {
+      throw new Error("User not found");
+    }
+    return await response.data;
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    throw error;
+  }
 };
 
 // Login user (JWT authentication)
