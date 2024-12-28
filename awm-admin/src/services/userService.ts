@@ -27,9 +27,9 @@ export const registerUser = async (user: {
   return response.data;
 };
 
-export const getUsers = async (page: number, size: number) => {
+export const getUsers = async (page: number, size: number, searchQuery : string) => {
   const axiosInstance = getAxiosInstance('user-management-api')
-  const response = await axiosInstance.get(`/getusers?page=${page}&size=${size}`);
+  const response = await axiosInstance.get(`/getusers?page=${page}&size=${size}`+ (searchQuery && searchQuery.trim() !== "" ? `&searchText=${encodeURIComponent(searchQuery)}` : ""));
   return response.data;
 };
 

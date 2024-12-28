@@ -7,7 +7,7 @@ const UserListPage: React.FC = () => {
   const [users, setUsers] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize] = useState(1000); // Default page size
-  const [totalUsers, setTotalUsers] = useState(0);
+  const [totalRecords, setTotalRecords] = useState(0);
   const [selectedColumns, setSelectedColumns] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [loading, setLoading] = useState(false);
@@ -15,9 +15,9 @@ const UserListPage: React.FC = () => {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const response = await getUsers(currentPage, pageSize);
+      const response = await getUsers(currentPage, pageSize, searchQuery);
       setUsers(response.users);
-      setTotalUsers(response.totalCount);
+      setTotalRecords(response.totalCount);
       if (response.users.length > 0 && selectedColumns.length === 0) {
         setSelectedColumns(Object.keys(response.users[0]));
       }
@@ -35,30 +35,30 @@ const UserListPage: React.FC = () => {
     fetchUsers();
   }, [currentPage, pageSize, searchQuery]);
 
-  const totalPages = Math.ceil(totalUsers / pageSize);
+  const totalPages = Math.ceil(totalRecords / pageSize);
 
   const handleSearch = () => {
     setCurrentPage(1);
+    setUsers([]);
     fetchUsers();
   };
 
   const handleClearSearch = () => {
     setSearchQuery("");
+    setUsers([]);
     setCurrentPage(1);
-    fetchUsers();
   };
 
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-2xl font-bold mb-4">User List</h2>
-      
       <div className="mb-4">
         <input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search users..."
-          className="border p-2 rounded mb-2"
+          className="border p-2 rounded mb-2"          
         />
         <button
           onClick={handleSearch}
@@ -67,13 +67,23 @@ const UserListPage: React.FC = () => {
           Search
         </button>
         <button
-          onClick={handleClearSearch}
-          className="px-4 py-2 bg-gray-500 text-white rounded ml-2"
-        >
+  onClick={handleClearSearch}
+  className={`px-4 py-2 rounded ml-2 ${
+    searchQuery.length === 0
+      ? "bg-gray-400 text-gray-200 cursor-not-allowed"
+      : "bg-gray-500 text-white hover:bg-gray-600"
+  }`}
+  disabled={searchQuery.length === 0}
+>
           Clear Search
         </button>
       </div>
-
+      <div className="mb-4 flex items-center">
+  <span className="text-lg font-semibold mr-2">Total Records:</span>
+  <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full font-bold text-xl">
+    {totalRecords}
+  </span>
+</div>
       {/* <ColumnSelector
         columns={users.length > 0 ? Object.keys(users[0]) : []}
         selectedColumns={selectedColumns}
@@ -105,7 +115,7 @@ const UserListPage: React.FC = () => {
         >
           Next
         </button>
-      </div>
+      </div>      
     </div>
   );
 };
