@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../services/userService";
+import WithEnterSubmit from "../components/WithEnterSubmit";
 
 const RegisterPage: React.FC = () => {
   const [Username, setUsername] = useState<string>("");
@@ -39,6 +40,7 @@ const RegisterPage: React.FC = () => {
     }, [FirstName, MiddleName, LastName]);
 
   return (
+    <WithEnterSubmit onSubmit={handleRegister}>
     <div className="flex justify-center items-center h-screen">
       <div className="p-6 bg-white rounded shadow-md w-full max-w-sm">
         <h2 className="text-2xl font-bold mb-4">Register</h2>
@@ -107,6 +109,7 @@ const RegisterPage: React.FC = () => {
         </button>
       </div>
     </div>
+    </WithEnterSubmit>
   );
 };
 
